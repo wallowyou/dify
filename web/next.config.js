@@ -74,6 +74,23 @@ const nextConfig = {
       },
     ]
   },
+  // 本地开发环境下的代理配置，类似于vite的proxy配置
+  async rewrites() {
+    const remoteApiUrl = process.env.REMOTE_API_URL
+    if (isDev && remoteApiUrl) {
+      return [
+        {
+          source: '/console/api/:path*',
+          destination: `${remoteApiUrl}/console/api/:path*`,
+        },
+        {
+          source: '/api/:path*',
+          destination: `${remoteApiUrl}/api/:path*`,
+        },
+      ]
+    }
+    return []
+  },
   output: 'standalone',
   compiler: {
     removeConsole: isDev ? false : { exclude: ['warn', 'error'] },
